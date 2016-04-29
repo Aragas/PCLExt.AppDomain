@@ -49,6 +49,9 @@
     <Compile Include="..\..\common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\PCLExt.AppDomain.Desktop\DesktopAppDomain.cs">
+      <Link>DesktopAppDomain.cs</Link>
+    </Compile>
     <Compile Include="..\PCLExt.AppDomain\AppDomain.cs">
       <Link>AppDomain.cs</Link>
     </Compile>

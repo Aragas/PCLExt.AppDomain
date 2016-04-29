@@ -47,6 +47,7 @@
     <Compile Include="..\PCLExt.AppDomain\AppDomain.cs">
       <Link>AppDomain.cs</Link>
     </Compile>
+    <Compile Include="DesktopAppDomain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,46 +9,42 @@ namespace PCLExt.AppDomain
     /// </summary>
     public static class AppDomain
     {
+        private static IAppDomain _instance;
+        private static IAppDomain Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+#if COMMON
+                    _instance = new DesktopAppDomain();
+#endif
+                }
+                return _instance;
+            }
+            set { _instance = value; }
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Assembly GetAssembly(Type type)
-        {
-#if COMMON
-            return System.Reflection.Assembly.GetAssembly(type);
-#endif
-
-            return null;
-        }
+        public static Assembly GetAssembly(Type type) => Instance.GetAssembly(type);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public static Assembly[] GetAssemblies()
-        {
-#if COMMON
-            return System.AppDomain.CurrentDomain.GetAssemblies();
-#endif
-
-            return null;
-        }
+        public static Assembly[] GetAssemblies() => Instance.GetAssemblies();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="assemblyData"></param>
         /// <returns></returns>
-        public static Assembly LoadAssembly(byte[] assemblyData)
-        {
-#if COMMON
-            return System.Reflection.Assembly.Load(assemblyData);
-#endif
-
-            return null;
-        }
+        public static Assembly LoadAssembly(byte[] assemblyData) => Instance.LoadAssembly(assemblyData);
 
         /// <summary>
         /// 
