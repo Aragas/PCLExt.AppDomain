@@ -9,21 +9,29 @@ namespace PCLExt.AppDomain
     /// </summary>
     public static class AppDomain
     {
-        private static IAppDomain _instance;
+        static Lazy<IAppDomain> _instance = new Lazy<IAppDomain>(CreateInstance, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+
+        static IAppDomain CreateInstance()
+        {
+#if COMMON
+            return new DesktopAppDomain();
+#endif
+
+            return null;
+        }
+
         private static IAppDomain Instance
         {
             get
             {
-                if (_instance == null)
-                {
-#if COMMON
-                    _instance = new DesktopAppDomain();
-#endif
-                }
-                return _instance;
+                var ret = _instance.Value;
+                if (ret == null)
+                    throw NotImplementedInReferenceAssembly();
+                return ret;
             }
-            set { _instance = value; }
         }
+
+        internal static Exception NotImplementedInReferenceAssembly() => new NotImplementedException("This functionality is not implemented in the portable version of this assembly.  You should reference the PCLExt.AppDomain NuGet package from your main application project in order to reference the platform-specific implementation.");
 
 
         /// <summary>
