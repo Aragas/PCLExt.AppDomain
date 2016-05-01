@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>PCLExt.AppDomain</id>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
         <title>PCL Extension - AppDomain API</title>
         <authors>Aragas</authors>
         <owners>Aragas</owners>
@@ -12,7 +12,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>PCL Extension provides an Assembly and AppDomain extension for .NET, Xamarin.iOS, Xamarin.Android. This makes it easier to create cross-platform .NET libraries and apps.</description>
         <summary>PCL Extension provides an Assembly and AppDomain extension for PCL platforms</summary>
-        <tags>assembly appdomain portable pcl android ios xamarin monoandroid monodroid monotouch</tags>
+        <tags>assembly appdomain portable pcl android mac ios xamarin monoandroid monotouch</tags>
         <dependencies>
             <group />
             <group targetFramework=".NETFramework4.5" />
