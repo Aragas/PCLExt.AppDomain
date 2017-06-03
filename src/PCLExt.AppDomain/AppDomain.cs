@@ -6,7 +6,7 @@ namespace PCLExt.AppDomain
     /// <summary>
     /// 
     /// </summary>
-    public static class AppDomain
+    public static partial class AppDomain
     {
         private static Exception NotImplementedInReferenceAssembly() =>
             new NotImplementedException(@"This functionality is not implemented in the portable version of this assembly.
@@ -41,27 +41,27 @@ You should reference the PCLExt.AppDomain NuGet package from your main applicati
         }
 
 #if DESKTOP || ANDROID || __IOS__ || MAC
+
+        private static Assembly CurrentDomainOnAssemblyResolve(object sender, System.ResolveEventArgs args) => _AssemblyResolve?.Invoke(sender, args);
+
+        private static ResolveEventHandler _AssemblyResolve;
         public static event ResolveEventHandler AssemblyResolve
         {
-            add { System.AppDomain.CurrentDomain.AssemblyResolve += DelegateUtility.Cast<System.ResolveEventHandler>(value); }
-            remove { System.AppDomain.CurrentDomain.AssemblyResolve -= DelegateUtility.Cast<System.ResolveEventHandler>(value); }
-        }
-        private static class DelegateUtility
-        {
-            public static T Cast<T>(Delegate source) where T : class => Cast(source, typeof(T)) as T;
-            public static Delegate Cast(Delegate source, Type type)
+            add
             {
-                if (source == null)
-                    return null;
-                var delegates = source.GetInvocationList();
-                if (delegates.Length == 1)
-                    return Delegate.CreateDelegate(type, delegates[0].Target, delegates[0].Method);
+                var wassEmpty = _AssemblyResolve == null;
+                    
+                _AssemblyResolve += value;
 
-                var delegatesDest = new Delegate[delegates.Length];
-                for (var nDelegate = 0; nDelegate < delegates.Length; nDelegate++)
-                    delegatesDest[nDelegate] = Delegate.CreateDelegate(type, delegates[nDelegate].Target, delegates[nDelegate].Method);
+                if(wassEmpty)
+                    System.AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+            }
+            remove
+            {
+                _AssemblyResolve -= value;
 
-                return Delegate.Combine(delegatesDest);
+                if (_AssemblyResolve == null)
+                    System.AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
             }
         }
 #else
@@ -71,5 +71,30 @@ You should reference the PCLExt.AppDomain NuGet package from your main applicati
             remove => throw NotImplementedInReferenceAssembly();
         }
 #endif
+
     }
+
+    /// <summary>Represents a method that handles the <see cref="E:System.AppDomain.TypeResolve" />, <see cref="E:System.AppDomain.ResourceResolve" />, or <see cref="E:System.AppDomain.AssemblyResolve" /> event of an <see cref="T:System.AppDomain" />.</summary>
+    /// <param name="sender">The source of the event. </param>
+    /// <param name="args">The event data. </param>
+    /// <returns>The assembly that resolves the type, assembly, or resource; or <see langword="null" /> if the assembly cannot be resolved.</returns>
+    public delegate Assembly ResolveEventHandler(object sender, ResolveEventArgs args);
+
+    public partial class ResolveEventArgs : EventArgs
+    {
+        public string Name { get; }
+        public Assembly RequestingAssembly { get; }
+
+        public ResolveEventArgs(string name) { Name = name; }
+
+        public ResolveEventArgs(string name, Assembly requestingAssembly) { Name = name; RequestingAssembly = requestingAssembly; }
+    }
+
+#if DESKTOP || ANDROID || __IOS__ || MAC
+    public partial class ResolveEventArgs
+    {
+        public static implicit operator System.ResolveEventArgs(ResolveEventArgs args) => new System.ResolveEventArgs(args.Name, args.RequestingAssembly);
+        public static implicit operator ResolveEventArgs(System.ResolveEventArgs args) => new ResolveEventArgs(args.Name, args.RequestingAssembly);
+    }
+#endif
 }

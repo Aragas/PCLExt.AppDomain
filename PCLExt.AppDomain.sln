@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCLExt.AppDomain", "src\PCLExt.AppDomain\PCLExt.AppDomain.csproj", "{A7C97A2B-F996-4CAF-87D8-F3A60B2B4D44}"
 EndProject
